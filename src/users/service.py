@@ -1,9 +1,11 @@
 from src.dao.base import BaseDao
+from src.users.auth import (create_access_token, get_password_hash,
+                            verify_password)
+from src.users.exceptions import EmailNotFound, EmailTaken, InvalidCredentials
 from src.users.models import Users
-from src.users.schemas import UserSchemas, UserViewSchemas, Token
-from src.users.exceptions import EmailTaken, EmailNotFound, InvalidCredentials
-from src.users.auth import get_password_hash, create_access_token
-from src.users.auth import verify_password
+from src.users.schemas import (Token, UserCreateSchemas, UserSchemas,
+                               UserViewSchemas)
+
 
 class UserService(BaseDao):
     class_name = Users
@@ -14,7 +16,14 @@ class UserService(BaseDao):
             raise EmailTaken()
         hashed_password = await get_password_hash(password=payload.password)
         return await UserService.add({"email":payload.email, "hashed_password": hashed_password})
+    
+    async def create_user(self, payload: UserCreateSchemas)-> dict:
+        user = await UserService.find_one_or_none({"email": payload.email})
+        if user:
+            raise EmailTaken()
+        # send email
         
+        return await UserService.add({"email":payload.email})
     
     async def login_admin(self, payload: UserSchemas)-> dict:
         user = user = await UserService.find_one_or_none({"email": payload.email})
