@@ -1,0 +1,102 @@
+[
+  {
+    "id": 1,
+    "name": "Astana"
+  },
+  {
+    "id": 2,
+    "name": "Almaty"
+  },
+  {
+    "id": 3,
+    "name": "Shymkent"
+  },
+  {
+    "id": 4,
+    "name": "Karaganda"
+  },
+  {
+    "id": 5,
+    "name": "Aktobe"
+  },
+  {
+    "id": 6,
+    "name": "Taraz"
+  },
+  {
+    "id": 7,
+    "name": "Pavlodar"
+  },
+  {
+    "id": 8,
+    "name": "Ust-Kamenogorsk"
+  },
+  {
+    "id": 9,
+    "name": "Semey"
+  },
+  {
+    "id": 10,
+    "name": "Kostanay"
+  },
+  {
+    "id": 11,
+    "name": "Kyzylorda"
+  },
+  {
+    "id": 12,
+    "name": "Uralsk"
+  },
+  {
+    "id": 13,
+    "name": "Petropavlovsk"
+  },
+  {
+    "id": 14,
+    "name": "Aktau"
+  },
+  {
+    "id": 15,
+    "name": "Temirtau"
+  },
+  {
+    "id": 16,
+    "name": "Taldykorgan"
+  },
+  {
+    "id": 17,
+    "name": "Oral"
+  },
+  {
+    "id": 18,
+    "name": "Atyrau"
+  },
+  {
+    "id": 19,
+    "name": "Kokshetau"
+  },
+  {
+    "id": 20,
+    "name": "Rudny"
+  },
+  {
+    "id": 21,
+    "name": "Ekibastuz"
+  },
+  {
+    "id": 22,
+    "name": "Zhezkazgan"
+  },
+  {
+    "id": 23,
+    "name": "Turkestan"
+  },
+  {
+    "id": 24,
+    "name": "Balkhash"
+  },
+  {
+    "id": 25,
+    "name": "Sarkand"
+  }
+]

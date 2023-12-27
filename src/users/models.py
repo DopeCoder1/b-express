@@ -1,6 +1,9 @@
-from src.database import Base
-from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, Table, UniqueConstraint, text
+from sqlalchemy import (Boolean, Column, Float, ForeignKey, Integer, String,
+                        Table, UniqueConstraint, text)
 from sqlalchemy.orm import relationship
+
+from src.database import Base
+
 
 class Group(Base):
     __tablename__ = 'fastapi_auth_group'
@@ -13,12 +16,25 @@ class Users(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, nullable=False)
+    first_name = Column(String, nullable=False)
+    last_name = Column(String, nullable=False)
     email = Column(String, nullable=False)
     hashed_password = Column(String, nullable=False)
     is_superuser = Column(Boolean, server_default=text('false'), comment="Are you a super administrator")
     is_active = Column(Boolean, server_default=text('true'), comment="Whether to engrave to log in")
     is_delete=Column(Boolean, server_default=text('false'), comment="delete or not")
     group_id=Column(Integer, ForeignKey("fastapi_auth_group.id"))
+    profile = relationship("UserProfile", uselist=False, back_populates="user")
+
+
+class Driver(Base):
+    __tablename__ = "drivers"
+
+    id = Column(Integer, primary_key=True, nullable=False)
+    longitude = Column(Float, nullable=False)
+    latitude = Column(Float, nullable=False)
+    car_mark = Column(String, nullable=False)
+    car_plate_number = Column(String, nullable=False)
 
     def __str__(self):
         return self.email

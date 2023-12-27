@@ -1,9 +1,14 @@
 from typing import Optional
+
 from pydantic import BaseModel, EmailStr
+
 
 class UserSchemas(BaseModel):
     email: EmailStr
     password: str
+
+class UserCreateSchemas(BaseModel):
+    email: EmailStr
 
 class UserViewSchemas(BaseModel):
     id: int
