@@ -1,7 +1,10 @@
 from typing import Any
+
 from pydantic import PostgresDsn
 from pydantic_settings import BaseSettings
+
 from src.constants import Environment
+
 
 class Config(BaseSettings):
     """
@@ -17,9 +20,9 @@ class Config(BaseSettings):
     ENVIRONMENT: Environment = Environment.PRODUCTION
     SITE_DOMAIN: str = "127.0.0.1"
 
-    CORS_ORIGINS: list[str]
+    CORS_ORIGINS: list[str] = []
     CORS_ORIGINS_REGEX: str | None = None
-    CORS_HEADERS: list[str]
+    CORS_HEADERS: list[str] = ["*"]
 
     APP_VERSION: str = "1"
 

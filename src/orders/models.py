@@ -1,6 +1,9 @@
-from src.database import Base
-from sqlalchemy import Column, Integer, String, JSON, ForeignKey, DateTime
 from datetime import datetime
+
+from sqlalchemy import JSON, Column, DateTime, ForeignKey, Integer, String
+
+from src.database import Base
+
 
 class Orders(Base):
     __tablename__ = "orders"
