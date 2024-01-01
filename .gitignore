@@ -1,4 +1,6 @@
-/.DS_Store
-/.env
-/venv
-/gunicorn_conf.py
+.DS_Store
+.env
+venv
+__pycache__
+**/__pycache__/
+.vscode
