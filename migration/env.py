@@ -12,7 +12,7 @@ from src.config import DATABASE_URL
 from src.database import Base
 from src.geography.models import City
 from src.orders.models import OrderItems, Orders, Payment
-from src.users.models import Driver, Group, Permission, Users
+from src.users.models import Driver, EmailCode, Group, Permission, Users
 from src.warehouse.models import Warehouse
 
 # this is the Alembic Config object, which provides

@@ -41,7 +41,7 @@ class Payment(Base, TimestampMixin):
     bin = Column(String, nullable=False)
     payment_date = Column(DateTime, default=datetime.now)
     order_id = Column(Integer, ForeignKey('orders.id'))
-    order = relationship("Order", back_populates="payment")
+    order = relationship("Orders", back_populates="payment")
 
 
 class Orders(Base, TimestampMixin):
