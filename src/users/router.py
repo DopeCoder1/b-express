@@ -15,6 +15,7 @@ router = APIRouter(
 async def register(payload: UserSchemas):
     return await user_service.register_admin(payload)
 
+
 @router.post("/login", status_code=status.HTTP_200_OK, response_model=Token)
 async def login(payload: UserSchemas):
     return await user_service.login_admin(payload)
@@ -22,3 +23,9 @@ async def login(payload: UserSchemas):
 @router.get("/me", dependencies=[Depends(JWTBearer())], response_model=UserViewSchemas, status_code=status.HTTP_200_OK)
 async def me(user: str = Depends(JWTBearer())):
     return user
+
+@router.post("/create/superuser", status_code=status.HTTP_201_CREATED, response_model=UserViewSchemas)
+async def create_superuser(email:str, password:str):
+    return await user_service.create_superuser(email, password)
+
+@router.post("/create/group", status_code=status.HTTP_201_CREATED, response_model=UserViewSchemas)
