@@ -60,7 +60,7 @@ class Orders(Base, TimestampMixin):
 
     total_weight = Column(Float, nullable=False)
     total_volume = Column(Float, nullable=False)
-    warehouse = Column(Integer, ForeignKey("warehouses.id"), nullable=False)
+    warehouse_id = Column(Integer, ForeignKey("warehouses.id"), nullable=False)
 
 
 class OrderItems(Base):

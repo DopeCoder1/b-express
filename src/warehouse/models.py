@@ -1,11 +1,7 @@
-from datetime import datetime
-from enum import Enum
-
 from sqlalchemy import (JSON, Column, DateTime, Float, ForeignKey, Integer,
                         String)
 
-from common.models import TimestampMixin
-from geography.models import City
+from src.common.models import TimestampMixin
 from src.database import Base
 
 
