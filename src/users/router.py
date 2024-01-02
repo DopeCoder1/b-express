@@ -28,4 +28,3 @@ async def me(user: str = Depends(JWTBearer())):
 async def create_superuser(email:str, password:str):
     return await user_service.create_superuser(email, password)
 
-@router.post("/create/group", status_code=status.HTTP_201_CREATED, response_model=UserViewSchemas)
