@@ -8,6 +8,10 @@ class UserSchemas(BaseModel):
 class UserViewSchemas(BaseModel):
     id: int
     email: EmailStr
+    is_superuser: bool
+    is_active: bool
+    is_delete: bool
+    group_id:  int | None = None
 
     class Config:
         orm_mode = True
