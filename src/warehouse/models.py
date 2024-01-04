@@ -1,5 +1,5 @@
-from sqlalchemy import (JSON, Column, DateTime, Float, ForeignKey, Integer,
-                        String)
+from sqlalchemy import (Boolean, Column, ForeignKey,
+                        Integer, String)
 
 from src.common.models import TimestampMixin
 from src.database import Base
@@ -14,5 +14,6 @@ class Warehouse(Base, TimestampMixin):
     city = Column(Integer, ForeignKey("cities.id"), nullable=False)
     street = Column(String, nullable=False)
     number = Column(String, nullable=False)
-
-
+    creator = Column(Integer, ForeignKey("users.id"), nullable=False)
+    status = Column(Boolean, server_default="false")
+    warehouse_user = Column(Integer, ForeignKey("users.id"), nullable=False)

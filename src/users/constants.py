@@ -7,3 +7,4 @@ class ErrorCode:
     REFRESH_TOKEN_NOT_VALID = "Недействительный токен обновления."
     REFRESH_TOKEN_REQUIRED = "Требуется токен обновления, либо в теле запроса, либо в куки."
     EMAIL_NOT_FOUND = "Пользыватель с таким email не найден."
+    GROUP_NOT_FOUND = "У пользывателья отсуствует роль."
