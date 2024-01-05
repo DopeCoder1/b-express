@@ -1,5 +1,3 @@
-from typing import Optional
-
 from pydantic import BaseModel, EmailStr
 
 
@@ -10,6 +8,15 @@ class UserSchemas(BaseModel):
 
 class UserCreateSchemas(BaseModel):
     email: EmailStr
+
+    model_config = {
+        "json_schema_extra": {
+            "example":
+            {
+                "email": "zshanabek@gmail.com"
+            }
+        }
+    }
 
 
 class UserConfirmationEmailSchemas(BaseModel):
