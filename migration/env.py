@@ -10,6 +10,7 @@ sys.path.insert(0, dirname(dirname(dirname(abspath(__file__)))))
 
 from src.config import DATABASE_URL
 from src.database import Base
+from src.directions.models import Directions
 from src.geography.models import City
 from src.orders.models import OrderItems, Orders, Payment
 from src.users.models import Driver, EmailCode, Group, Permission, Users
