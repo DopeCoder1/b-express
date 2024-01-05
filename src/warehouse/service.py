@@ -13,5 +13,10 @@ class WarehouseService(BaseDao):
     async def get(self, user: Users) -> list[dict]:
         return await WarehouseService.find_all({"creator": user.id})
 
-
+    async def get_one(self, id: int, user: Users) -> dict:
+        return await WarehouseService.find_one_or_none({"id": id, "creator": user.id})
+    
+    async def update(self, id: int, payload: WarehouseCreateSchemas, user: Users) -> dict:
+        return await WarehouseService.update({"id": id, "creator": user.id}, payload)
+    
 warehouse_service = WarehouseService()
