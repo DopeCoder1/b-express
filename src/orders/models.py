@@ -10,6 +10,7 @@ from src.database import Base
 
 
 class OrderStatus(Enum):
+    CREATED = "CREATED"
     ASSIGNED_TO_COURIER = "ASSIGNED_TO_COURIER"
     COURIER_DELIVERING_TO_WAREHOUSE = "COURIER_DELIVERING_TO_WAREHOUSE"
     ACCEPTED_TO_WAREHOUSE = "ACCEPTED_TO_WAREHOUSE"
@@ -53,7 +54,7 @@ class Orders(Base, TimestampMixin):
     created_at = Column(DateTime, default=datetime.now)
     updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
     address = Column(String, nullable=False)
-    courier = Column(Integer, ForeignKey("users.id"), nullable=False)
+    courier = Column(Integer, ForeignKey("users.id"), nullable=True)
     sender_fio = Column(String, nullable=False)
     sender_phone = Column(String, nullable=False)
     reciever_fio = Column(String, nullable=False)

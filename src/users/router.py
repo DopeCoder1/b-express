@@ -29,7 +29,7 @@ async def login(payload: UserSchemas):
 
 @router.get("/me", dependencies=[Depends(JWTBearer())], response_model=UserViewSchemas, status_code=status.HTTP_200_OK)
 async def me(user: str = Depends(JWTBearer())):
-    return user
+    return await user_service.me(user)
 
 
 @router.post("/create/superuser", status_code=status.HTTP_201_CREATED, response_model=UserViewSchemas)

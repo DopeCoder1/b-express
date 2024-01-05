@@ -108,6 +108,9 @@ class UserService(BaseDao):
             user_view.confirmation_link = url
         return user_view
 
+    async def me(self, user: UserViewSchemas) -> UserViewSchemas:
+        return user
+
     async def register_deliver(self, payload: UserSchemas) -> dict:
         user = await UserService.find_one_or_none({"email": payload.email})
         if user:

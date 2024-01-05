@@ -38,13 +38,9 @@ class BaseDao:
     @classmethod
     async def add(cls, data: Any):
         async with async_session_maker() as session:
-            try:
-                data = cls.class_name(**data)
-                session.add(data)
-                await session.commit()
-            except IntegrityError:
-                await session.rollback()
-                raise NotUnique()
+            data = cls.class_name(**data)
+            session.add(data)
+            await session.commit()
             await session.refresh(data)
             return data
         

@@ -26,14 +26,27 @@ class UserConfirmationEmailSchemas(BaseModel):
     confirm_password: str
 
 
+class GroupViewSchemas(BaseModel):
+    id: int
+    name: str
+
+
 class UserViewSchemas(BaseModel):
     id: int
     email: EmailStr
     is_superuser: bool
     is_active: bool
     is_delete: bool
-    group_id:  int | None = None
+    group: GroupViewSchemas | None = None
     confirmation_link: str | None = None
+    creator: int | None = None
+    first_name: str | None = None
+    last_name: str | None = None
+    phone: str | None = None
+    city: int | None = None
+    salary: float | None = None
+    group_id: int | None = None
+    creator: int | None = None
 
     class Config:
         from_attributes = True
