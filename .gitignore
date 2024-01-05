@@ -6,4 +6,6 @@ __pycache__
 .vscode
 access_log
 error_log
-
+.venv
+logs
+gunicorn_start
