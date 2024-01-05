@@ -7,8 +7,19 @@ from src.geography.utils import init_data
 from src.orders.router import router as router_orders
 from src.users.router import router as router_users
 from src.warehouse.router import router as router_warehouse
+from starlette.middleware.cors import CORSMiddleware
+from src.config import settings
 
 app = FastAPI(debug=True)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.CORS_ORIGINS,
+    allow_origin_regex=settings.CORS_ORIGINS_REGEX,
+    allow_credentials=True,
+    allow_methods=("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"),
+    allow_headers=settings.CORS_HEADERS,
+)
 
 app.include_router(router_users)
 app.include_router(router_orders)
