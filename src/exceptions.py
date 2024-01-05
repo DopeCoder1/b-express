@@ -25,6 +25,11 @@ class BadRequest(DetailedHTTPException):
     DETAIL = "Не удалось обработать запрос"
 
 
+
+class NotUnique(DetailedHTTPException):
+    STATUS_CODE = status.HTTP_400_BAD_REQUEST
+    DETAIL = "Не уникальный поля"
+
 class NotAuthenticated(DetailedHTTPException):
     STATUS_CODE = status.HTTP_401_UNAUTHORIZED
     DETAIL = "Необходима авторизация"

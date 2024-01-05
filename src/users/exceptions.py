@@ -27,3 +27,7 @@ class RefreshTokenNotValid(NotAuthenticated):
 
 class EmailNotFound(NotFound):
     DETAIL = ErrorCode.EMAIL_NOT_FOUND
+
+class RoleNotFound(NotFound):
+    DETAIL = ErrorCode.GROUP_NOT_FOUND
+    

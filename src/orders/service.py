@@ -9,11 +9,13 @@ class OrderService(BaseDao):
     class_name = Orders
     
     async def create_order(self, payload: OrdersCreateSchemas, user: UserViewSchemas)-> dict:
-        data = {
-            "address": payload.address,
-            "creator": user.id
-        }
-        return await OrderService.add(data)
+        # data = {
+        #     "address": payload.address,
+        #     "creator": user.id
+        # }
+        # return await OrderService.add(data)
+        order = await OrderService.add({""})
+        
         
     async def get_orders(self, user:UserViewSchemas)-> list[OrderViewSchemas]:
         return await OrderService.find_all({"creator": user.id})

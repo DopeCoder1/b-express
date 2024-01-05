@@ -1,14 +1,85 @@
+import random
+
+from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
+
 from src.clients.sendgrid import mail_client
 from src.common.models import SendEmail
 from src.config import settings
 from src.dao.base import BaseDao
-from src.email.service import email_service
+from src.database import async_session_maker
+from src.exceptions import NotUnique
 from src.users.auth import (create_access_token, get_password_hash,
                             verify_password)
 from src.users.exceptions import EmailNotFound, EmailTaken, InvalidCredentials
-from src.users.models import EmailCode, Users
-from src.users.schemas import (Token, UserConfirmationEmailSchemas,
+from src.users.models import (EmailCode, Group, Permission, Users,
+                              auth_group_permission)
+from src.users.schemas import (AuthGroupPermissionCreateSchemas,
+                               GroupCreateSchemas, PermissionCreateSchemas,
+                               Token, UserConfirmationEmailSchemas,
                                UserCreateSchemas, UserSchemas, UserViewSchemas)
+
+
+class EmailCodeService(BaseDao):
+    class_name = EmailCode
+
+    def code_generator(self):
+        code = random.randint(1000, 9999)
+        return code
+
+    async def create_code(self, user_id: int, email: str):
+        return await self.add({
+            "email": email,
+            "user_id": user_id,
+            "code": str(self.code_generator())
+        })
+
+
+class GroupService(BaseDao):
+    class_name = Group
+
+    async def create(self, paylaod: GroupCreateSchemas) -> dict:
+        return await GroupService.add({"name": paylaod.name})
+
+    async def get(slef) -> list[dict]:
+        return await GroupService.get()
+
+
+class PermissionService(BaseDao):
+    class_name = Permission
+
+    async def create(self, payload: PermissionCreateSchemas) -> dict:
+        return await PermissionService.add({"name": payload.name, "codename": payload.codename})
+
+    async def get(self) -> list[dict]:
+        return await PermissionService.all()
+
+
+class AuthGroupPermissionService(BaseDao):
+    class_name = auth_group_permission
+
+    async def create(self, paylaod: AuthGroupPermissionCreateSchemas) -> dict:
+        async with async_session_maker() as session:
+            try:
+                query = auth_group_permission.insert().values(
+                    group_id=paylaod.group_id, codename=paylaod.codename).returning(
+                        auth_group_permission.c.id,
+                        auth_group_permission.c.group_id,
+                        auth_group_permission.c.codename
+                )
+                data = await session.execute(query)
+                inserted_data = data.first()
+                await session.commit()
+            except IntegrityError:
+                await session.rollback()
+                raise NotUnique()
+            return inserted_data
+
+    async def get(self) -> list[dict]:
+        async with async_session_maker() as session:
+            query = select(auth_group_permission)
+            result = await session.execute(query)
+            return result
 
 
 class UserService(BaseDao):
@@ -36,6 +107,13 @@ class UserService(BaseDao):
         if settings.ENVIRONMENT.is_debug:
             user_view.confirmation_link = url
         return user_view
+
+    async def register_deliver(self, payload: UserSchemas) -> dict:
+        user = await UserService.find_one_or_none({"email": payload.email})
+        if user:
+            raise EmailTaken()
+        hashed_password = await get_password_hash(password=payload.password)
+        return await self.add({"email": payload.email, "hashed_password": hashed_password, "group_id": payload.group_id})
 
     async def login_admin(self, payload: UserSchemas) -> dict:
         user = await UserService.find_one_or_none({"email": payload.email})
@@ -68,4 +146,9 @@ class UserService(BaseDao):
         await UserService.update(id=user.id, data=user.to_dict())
         return Token(access_token=access_token, token_type="bearer")
 
+
 user_service = UserService()
+group_service = GroupService()
+permission_service = PermissionService()
+email_service = EmailCodeService()
+group_permission = AuthGroupPermissionService()

@@ -1,5 +1,5 @@
-from sqlalchemy import (Boolean, Column, Float, ForeignKey, Integer, String,
-                        Table, UniqueConstraint, text)
+from sqlalchemy import (DECIMAL, Boolean, Column, Float, ForeignKey, Integer,
+                        String, Table, UniqueConstraint, text)
 from sqlalchemy.orm import relationship
 
 from src.common.models import TimestampMixin
@@ -11,9 +11,6 @@ class Group(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(150), unique=True, index=True, comment="group name")
 
-    def __str__(self):
-        return self.name
-
 
 class Users(Base):
     __tablename__ = "users"
@@ -22,6 +19,7 @@ class Users(Base):
     first_name = Column(String, nullable=True)
     last_name = Column(String, nullable=True)
     email = Column(String, nullable=False)
+    phone = Column(String, nullable=True)
     hashed_password = Column(String, nullable=True)
     is_superuser = Column(Boolean, server_default=text(
         'false'), comment="Are you a super administrator")
@@ -30,8 +28,12 @@ class Users(Base):
     is_delete = Column(Boolean, server_default=text(
         'false'), comment="delete or not")
     group_id = Column(Integer, ForeignKey("fastapi_auth_group.id"))
+    creator = Column(Integer, ForeignKey("users.id"), nullable=True)
+    salary = Column(DECIMAL(10, 2), nullable=True)
+    city = Column(Integer, ForeignKey("cities.id"), nullable=True)
     driver_id = Column(Integer, ForeignKey('drivers.id'))
     driver = relationship("Driver", uselist=False)
+
 
 class Driver(Base):
     __tablename__ = "drivers"

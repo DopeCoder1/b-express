@@ -1,7 +1,8 @@
 from datetime import datetime
 from enum import Enum
 
-from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String
+from sqlalchemy import (DECIMAL, Column, DateTime, Float, ForeignKey, Integer,
+                        String)
 from sqlalchemy.orm import relationship
 
 from src.common.models import TimestampMixin
@@ -53,11 +54,13 @@ class Orders(Base, TimestampMixin):
     updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
     address = Column(String, nullable=False)
     courier = Column(Integer, ForeignKey("users.id"), nullable=False)
-    sender = Column(Integer, ForeignKey("users.id"), nullable=False)
-    reciever = Column(Integer, ForeignKey("users.id"), nullable=False)
+    sender_fio = Column(String, nullable=False)
+    sender_phone = Column(String, nullable=False)
+    reciever_fio = Column(String, nullable=False)
+    reciever_phone = Column(String, nullable=False)
     order_status = Column(String, nullable=False)
     payment = relationship("Payment", uselist=False, back_populates="order")
-
+    insurance = Column(DECIMAL(10, 2), nullable=False)
     total_weight = Column(Float, nullable=False)
     total_volume = Column(Float, nullable=False)
     warehouse_id = Column(Integer, ForeignKey("warehouses.id"), nullable=False)
@@ -69,3 +72,4 @@ class OrderItems(Base):
     order_id = Column(Integer, ForeignKey("orders.id"), nullable=False)
     photo = Column(String, nullable=False)
     status = Column(String, nullable=False)
+    description = Column(String, nullable=False)

@@ -29,7 +29,7 @@ class UserViewSchemas(BaseModel):
     confirmation_link: str | None = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class Token(BaseModel):
@@ -39,3 +39,42 @@ class Token(BaseModel):
 
 class DataToken(BaseModel):
     id: str | None = None
+
+
+class PermissionCreateSchemas(BaseModel):
+    name: str
+    codename: str
+
+
+class PermissionViewSchemas(BaseModel):
+    name: str
+    codename: str
+
+    class Config:
+        from_attributes = True
+
+
+class GroupCreateSchemas(BaseModel):
+    name: str
+
+
+class GroupViewSchemas(BaseModel):
+    id: int
+    name: str
+
+    class Config:
+        from_attributes = True
+
+
+class AuthGroupPermissionCreateSchemas(BaseModel):
+    group_id: int
+    codename: str
+
+
+class AuthGroupPermissionViewSchemas(BaseModel):
+    id: int
+    group_id: int
+    codename: str
+
+    class Config:
+        from_attributes = True
