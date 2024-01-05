@@ -6,7 +6,6 @@ from pydantic import BaseModel, EmailStr
 class UserSchemas(BaseModel):
     email: EmailStr
     password: str
-    group_id: int | None = None
 
 
 class UserCreateSchemas(BaseModel):
