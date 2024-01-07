@@ -16,7 +16,7 @@ async def create_warehouse(payload: WarehouseCreateSchemas, user: Users = Depend
 
 
 @router.get("/warehouses", status_code=status.HTTP_200_OK, response_model=list[WarehouseViewSchemas])
-async def list_warehouse(user: Users = Depends(JWTBearer())):
+async def list_warehouses(user: Users = Depends(JWTBearer())):
     return await warehouse_service.get(user)
 
 
