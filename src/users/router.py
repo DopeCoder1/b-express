@@ -48,7 +48,7 @@ async def confirm_email(payload: UserConfirmationEmailSchemas):
 
 
 @router.get("/groups", status_code=status.HTTP_200_OK, response_model=list[GroupViewSchemas])
-async def get_group():
+async def get_groups():
     return await group_service.all()
 
 
@@ -58,7 +58,7 @@ async def create_group(payload: GroupCreateSchemas):
 
 
 @router.get("/permissions", status_code=status.HTTP_200_OK, response_model=list[PermissionViewSchemas])
-async def get_permission():
+async def get_permissions():
     return await permission_service.get()
 
 
@@ -73,7 +73,7 @@ async def create_group_permission(paylaod: AuthGroupPermissionCreateSchemas):
 
 
 @router.get("/group_permissions", status_code=status.HTTP_200_OK, response_model=list[AuthGroupPermissionViewSchemas])
-async def get_group_permission():
+async def get_group_permissions():
     return await group_permission.get()
 
 
