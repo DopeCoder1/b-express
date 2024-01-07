@@ -17,11 +17,6 @@ router = APIRouter(
 )
 
 
-@router.post("/register/admin", status_code=status.HTTP_201_CREATED, response_model=UserViewSchemas)
-async def register(payload: UserSchemas):
-    return await user_service.register_admin(payload)
-
-
 @router.post("/login", status_code=status.HTTP_200_OK, response_model=Token)
 async def login(payload: UserSchemas):
     return await user_service.login_admin(payload)
@@ -32,19 +27,19 @@ async def me(user: str = Depends(JWTBearer())):
     return await user_service.me(user)
 
 
-@router.post("/create/superuser", status_code=status.HTTP_201_CREATED, response_model=UserViewSchemas)
+@router.post("/superusers", status_code=status.HTTP_201_CREATED, response_model=UserViewSchemas)
 async def create_superuser(email: str, password: str):
     return await user_service.create_superuser(email, password)
 
 
-@router.post("/users", status_code=status.HTTP_201_CREATED, response_model=UserViewSchemas)
-async def create_user(payload: UserCreateSchemas):
-    return await user_service.create_user(payload)
+@router.get("/users", dependencies=[Depends(JWTBearer())], status_code=status.HTTP_200_OK, response_model=list[UserViewSchemas])
+async def get_users():
+    return await user_service.get_users()
 
 
-@router.post("/create/users/deliver", status_code=status.HTTP_201_CREATED, response_model=UserViewSchemas)
-async def create_user(payload: UserSchemas):
-    return await user_service.register_deliver(payload)
+@router.post("/users", dependencies=[Depends(JWTBearer())], status_code=status.HTTP_201_CREATED, response_model=UserCreateSchemas)
+async def create_user(payload: UserCreateSchemas, user: str = Depends(JWTBearer())):
+    return await user_service.create_user(payload, user)
 
 
 @router.post("/users/email-confirmation", status_code=status.HTTP_201_CREATED, response_model=Token)
@@ -52,32 +47,32 @@ async def confirm_email(payload: UserConfirmationEmailSchemas):
     return await user_service.confirm_email(payload)
 
 
-@router.get("/get/group", status_code=status.HTTP_200_OK, response_model=list[GroupViewSchemas])
+@router.get("/groups", status_code=status.HTTP_200_OK, response_model=list[GroupViewSchemas])
 async def get_group():
     return await group_service.all()
 
 
-@router.post("/create/group", status_code=status.HTTP_201_CREATED, response_model=GroupViewSchemas)
+@router.post("/groups", status_code=status.HTTP_201_CREATED, response_model=GroupViewSchemas)
 async def create_group(payload: GroupCreateSchemas):
     return await group_service.create(payload)
 
 
-@router.get("/get/permission", status_code=status.HTTP_200_OK, response_model=list[PermissionViewSchemas])
+@router.get("/permissions", status_code=status.HTTP_200_OK, response_model=list[PermissionViewSchemas])
 async def get_permission():
     return await permission_service.get()
 
 
-@router.post("/create/permission", status_code=status.HTTP_201_CREATED, response_model=PermissionViewSchemas)
+@router.post("/permissions", status_code=status.HTTP_201_CREATED, response_model=PermissionViewSchemas)
 async def create_permission(payload: PermissionCreateSchemas):
     return await permission_service.create(payload)
 
 
-@router.post("/create/group_permission", status_code=status.HTTP_201_CREATED, response_model=AuthGroupPermissionViewSchemas)
+@router.post("/group_permissions", status_code=status.HTTP_201_CREATED, response_model=AuthGroupPermissionViewSchemas)
 async def create_group_permission(paylaod: AuthGroupPermissionCreateSchemas):
     return await group_permission.create(paylaod)
 
 
-@router.get("/get/group_permission", status_code=status.HTTP_200_OK, response_model=list[AuthGroupPermissionViewSchemas])
+@router.get("/group_permissions", status_code=status.HTTP_200_OK, response_model=list[AuthGroupPermissionViewSchemas])
 async def get_group_permission():
     return await group_permission.get()
 
