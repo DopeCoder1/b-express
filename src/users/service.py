@@ -7,17 +7,20 @@ from src.clients.sendgrid import mail_client
 from src.common.models import SendEmail
 from src.config import settings
 from src.dao.base import BaseDao
-from src.database import async_session_maker
+from src.database import async_session
 from src.exceptions import NotUnique
+from src.geography.models import City
+from src.geography.schemas import CityOut
 from src.users.auth import (create_access_token, get_password_hash,
                             verify_password)
 from src.users.exceptions import EmailNotFound, EmailTaken, InvalidCredentials
 from src.users.models import (EmailCode, Group, Permission, Users,
                               auth_group_permission)
 from src.users.schemas import (AuthGroupPermissionCreateSchemas,
-                               GroupCreateSchemas, PermissionCreateSchemas,
-                               Token, UserConfirmationEmailSchemas,
-                               UserCreateSchemas, UserSchemas, UserViewSchemas)
+                               GroupCreateSchemas, GroupViewSchemas,
+                               PermissionCreateSchemas, Token,
+                               UserConfirmationEmailSchemas, UserCreateSchemas,
+                               UserSchemas, UserViewSchemas)
 
 
 class EmailCodeService(BaseDao):
@@ -59,7 +62,7 @@ class AuthGroupPermissionService(BaseDao):
     class_name = auth_group_permission
 
     async def create(self, paylaod: AuthGroupPermissionCreateSchemas) -> dict:
-        async with async_session_maker() as session:
+        async with async_session() as session:
             try:
                 query = auth_group_permission.insert().values(
                     group_id=paylaod.group_id, codename=paylaod.codename).returning(
@@ -76,7 +79,7 @@ class AuthGroupPermissionService(BaseDao):
             return inserted_data
 
     async def get(self) -> list[dict]:
-        async with async_session_maker() as session:
+        async with async_session() as session:
             query = select(auth_group_permission)
             result = await session.execute(query)
             return result
@@ -85,38 +88,58 @@ class AuthGroupPermissionService(BaseDao):
 class UserService(BaseDao):
     class_name = Users
 
-    async def register_admin(self, payload: UserSchemas) -> dict:
-        user = await UserService.find_one_or_none({"email": payload.email})
-        if user:
-            raise EmailTaken()
-        hashed_password = await get_password_hash(password=payload.password)
-        return await self.add({"email": payload.email, "hashed_password": hashed_password})
+    def password_generator(self) -> str:
+        password = ''.join((random.choice(
+            '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') for i in range(8)))
+        return password
 
-    async def create_user(self, payload: UserCreateSchemas):
+    async def create_user(self, payload: UserCreateSchemas, creator: UserViewSchemas):
         user = await UserService.find_one_or_none({"email": payload.email})
         if user:
             raise EmailTaken()
-        user: Users = await self.add({"email": payload.email})
-        code: EmailCode = await email_service.create_code(user_id=user.id, email=payload.email)
-        url = f"{settings.FRONTEND_URL}/users/confirm?code={code.code}&user_id={user.id}"
-        send_mail = SendEmail(email=payload.email, subject="Подтверждение почты",
-                              message=f"Перейдите по ссылке для подтверждения почты: {url}")
+        password = self.password_generator()
+        hashed_password = await get_password_hash(password=password)
+        session = async_session()
+        group = await session.execute(select(Group).where(Group.id == payload.group_id))
+        city = await session.execute(select(City).where(City.id == payload.city_id))
+        user = Users(email=payload.email, hashed_password=hashed_password,
+                     city=city.scalars().first().id, group_id=group.scalars().first().id)
+        session.add(user)
+        await session.commit()
+        url = f"{settings.FRONTEND_URL}"
+        send_mail = SendEmail(
+            email=payload.email,
+            subject="Войдите в аккаунт B-Express",
+            message=f"Ваш пароль: {password} \n Ссылка для входа: {url}"
+        )
         mail_client.send(send_mail)
-        user_view = UserViewSchemas(
-            id=user.id, email=user.email, is_active=user.is_active, is_superuser=user.is_superuser, is_delete=user.is_delete, group_id=user.group_id)
+        user_view = UserViewSchemas(id=user.id, email=user.email, is_active=user.is_active,
+                                    is_superuser=user.is_superuser, is_delete=user.is_delete, group_id=user.group_id, city_id=user.city, creator=creator.id)
         if settings.ENVIRONMENT.is_debug:
-            user_view.confirmation_link = url
+            user_view.confirmation_link = password
         return user_view
 
     async def me(self, user: UserViewSchemas) -> UserViewSchemas:
+        user_db: Users = await UserService.find_one_or_none({"id": user.id})
+        group = await group_service.find_one_or_none({"id": user_db.group_id})
+        user.group = GroupViewSchemas(id=group.id, name=group.name)
+        if user.city:
+            async with async_session() as session:
+                group = await session.execute(select(City).where(City.id == user_db.city))
+                city = group.scalars().first()
+                user.city = CityOut(id=city.id, name=city.name)
         return user
 
-    async def register_deliver(self, payload: UserSchemas) -> dict:
-        user = await UserService.find_one_or_none({"email": payload.email})
-        if user:
-            raise EmailTaken()
-        hashed_password = await get_password_hash(password=payload.password)
-        return await self.add({"email": payload.email, "hashed_password": hashed_password, "group_id": payload.group_id})
+    async def get_users(self) -> list[UserViewSchemas]:
+        users = await UserService.all()
+        users_view = []
+        for user in users:
+            group = await group_service.find_one_or_none({"id": user.group_id})
+            user_view = UserViewSchemas(
+                id=user.id, email=user.email, is_active=user.is_active, is_superuser=user.is_superuser, is_delete=user.is_delete, group_id=user.group_id)
+            user_view.group = GroupViewSchemas(id=group.id, name=group.name)
+            users_view.append(user_view)
+        return users_view
 
     async def login_admin(self, payload: UserSchemas) -> dict:
         user = await UserService.find_one_or_none({"email": payload.email})
@@ -133,7 +156,8 @@ class UserService(BaseDao):
         if user:
             print("Email already exists")
             raise EmailTaken()
-        return await UserService.add({"email": email, "hashed_password": hashed_password, "is_superuser": True})
+        group = await group_service.find_one_or_none({"name": "SUPER_ADMIN"})
+        return await UserService.add({"email": email, "hashed_password": hashed_password, "is_superuser": True, "group_id": group.id})
 
     async def confirm_email(self, payload: UserConfirmationEmailSchemas) -> Token:
         code: EmailCode = await email_service.find_one_or_none({"code": payload.code, "user_id": payload.user_id})

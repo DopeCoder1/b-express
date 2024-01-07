@@ -67,8 +67,7 @@ class Permission(Base):
     # The permission field is also the field for us to judge the permission input
     codename = Column(
         String(100), comment="Permission Field", primary_key=True)
-    groups = relationship("Group", backref="permissions",
-                          secondary=auth_group_permission)
+    group_id = Column(Integer, ForeignKey("fastapi_auth_group.id"))
 
     def __str__(self):
         return self.name

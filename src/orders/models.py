@@ -30,6 +30,11 @@ STATUS_GROUPS = {
 }
 
 
+class PaymentStatus(Enum):
+    NOT_PAID = "NOT_PAID"
+    PAID = "PAID"
+
+
 class Payment(Base, TimestampMixin):
     __tablename__ = "payments"
 
@@ -65,6 +70,7 @@ class Orders(Base, TimestampMixin):
     total_weight = Column(Float, nullable=False)
     total_volume = Column(Float, nullable=False)
     warehouse_id = Column(Integer, ForeignKey("warehouses.id"), nullable=False)
+    direction_id = Column(Integer, ForeignKey("directions.id"))
 
 
 class OrderItems(Base):

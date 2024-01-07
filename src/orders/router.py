@@ -9,7 +9,7 @@ router = APIRouter(
 )
 
 
-@router.post("/orders", status_code=status.HTTP_201_CREATED, response_model=OrderViewSchemas)
+@router.post("/orders", status_code=status.HTTP_201_CREATED, response_model=OrdersCreateSchemas)
 async def create_order(payload: OrdersCreateSchemas, user: str = Depends(JWTBearer())):
     return await order_service.create_order(payload, user)
 

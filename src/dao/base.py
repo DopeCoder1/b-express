@@ -4,7 +4,7 @@ from fastapi import HTTPException, status
 from sqlalchemy import select, update
 from sqlalchemy.exc import IntegrityError
 
-from src.database import async_session_maker
+from src.database import async_session
 from src.exceptions import NotUnique
 
 
@@ -13,7 +13,7 @@ class BaseDao:
 
     @classmethod
     async def find_by_id(cls, id: int):
-        async with async_session_maker() as session:
+        async with async_session() as session:
             query = select(cls.class_name).filter_by(id=id)
             data = await session.execute(query)
             resp = data.scalar_one_or_none()
@@ -21,7 +21,7 @@ class BaseDao:
 
     @classmethod
     async def find_one_or_none(cls, filter):
-        async with async_session_maker() as session:
+        async with async_session() as session:
             query = select(cls.class_name).filter_by(**filter)
             data = await session.execute(query)
             resp = data.scalar_one_or_none()
@@ -29,7 +29,7 @@ class BaseDao:
 
     @classmethod
     async def find_all(cls, filter):
-        async with async_session_maker() as session:
+        async with async_session() as session:
             query = select(cls.class_name).filter_by(**filter)
             data = await session.execute(query)
             resp = data.scalars().all()
@@ -37,7 +37,7 @@ class BaseDao:
 
     @classmethod
     async def add(cls, data: Any):
-        async with async_session_maker() as session:
+        async with async_session() as session:
             data = cls.class_name(**data)
             session.add(data)
             await session.commit()
@@ -46,7 +46,7 @@ class BaseDao:
         
     @classmethod
     async def all(cls):
-        async with async_session_maker() as session:
+        async with async_session() as session:
             query = select(cls.class_name)
             data = await session.execute(query)
             resp = data.scalars().all()
@@ -54,7 +54,7 @@ class BaseDao:
 
     @classmethod
     async def delete(cls, filter):
-        async with async_session_maker() as session:
+        async with async_session() as session:
             query = select(cls.class_name).filter_by(**filter)
             data = await session.execute(query)
             resp = data.scalar_one_or_none()
@@ -66,7 +66,7 @@ class BaseDao:
 
     @classmethod
     async def update(cls, id: int, data: Any):
-        async with async_session_maker() as session:
+        async with async_session() as session:
             stmt = (
                 update(cls.class_name)
                 .where(cls.class_name.id == id)
@@ -77,7 +77,7 @@ class BaseDao:
 
     @classmethod
     async def add_all(cls, data: Any):
-        async with async_session_maker() as session:
+        async with async_session() as session:
             session.add_all(data)
             await session.commit()
             return data
