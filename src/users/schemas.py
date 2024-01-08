@@ -170,31 +170,6 @@ PERMISSIONS_MAP = [
         ]
     },
     {
-        "group_name": "SUPERVISOR",
-        "permissions": [
-            {
-                "name": "CREATE_REMOVE_ORDER",
-                "codename": "CREATE_REMOVE_ORDER"
-            },
-            {
-                "name": "LIST_ORDERS",
-                "codename": "LIST_ORDERS"
-            },
-            {
-                "name": "VIEW_EMPLOYEES",
-                "codename": "VIEW_EMPLOYEES"
-            },
-            {
-                "name": "CREATE_REMOVE_USER",
-                "codename": "CREATE_REMOVE_USER"
-            },
-            {
-                "name": "CANCEL_ORDERS",
-                "codename": "CANCEL_ORDERS"
-            },
-        ]
-    },
-    {
         "group_name": "MANAGER",
         "permissions": [
             {
@@ -213,6 +188,10 @@ PERMISSIONS_MAP = [
                 "name": "SIGN_ORDERS",
                 "codename": "SIGN_ORDERS"
             },
+            {
+                "name": "GENERATE_REPORTS",
+                "codename": "GENERATE_REPORTS"
+            },
         ]
     },
     {
@@ -229,6 +208,10 @@ PERMISSIONS_MAP = [
             {
                 "name": "PAY_ORDERS",
                 "codename": "PAY_ORDERS"
+            },
+            {
+                "name": "SIGN_ORDERS",
+                "codename": "SIGN_ORDERS"
             },
         ]
     },
@@ -263,11 +246,7 @@ PERMISSIONS_MAP = [
             {
                 "name": "SIGN_ORDERS",
                 "codename": "SIGN_ORDERS"
-            },
-            {
-                "name": "DELIVER_ORDERS",
-                "codename": "DELIVER_ORDERS"
-            },
+            }
         ]
     }
 ]
