@@ -18,13 +18,14 @@ from src.warehouse.router import router as router_warehouse
 
 app = FastAPI(debug=True)
 
+origins = ["*"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS,
-    allow_origin_regex=settings.CORS_ORIGINS_REGEX,
+    allow_origins=origins,
     allow_credentials=True,
-    allow_methods=("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"),
-    allow_headers=settings.CORS_HEADERS,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 app.include_router(router_users)
