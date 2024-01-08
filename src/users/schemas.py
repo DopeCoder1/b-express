@@ -231,5 +231,43 @@ PERMISSIONS_MAP = [
                 "codename": "PAY_ORDERS"
             },
         ]
+    },
+    {
+        "group_name": "COURIER",
+        "permissions": [
+            {
+                "name": "LIST_ORDERS",
+                "codename": "LIST_ORDERS"
+            },
+            {
+                "name": "CANCEL_ORDERS",
+                "codename": "CANCEL_ORDERS"
+            },
+            {
+                "name": "DELIVER_ORDERS",
+                "codename": "DELIVER_ORDERS"
+            },
+        ]
+    },
+    {
+        "group_name": "WAREHOUSE_MANAGER",
+        "permissions": [
+            {
+                "name": "LIST_ORDERS",
+                "codename": "LIST_ORDERS"
+            },
+            {
+                "name": "CANCEL_ORDERS",
+                "codename": "CANCEL_ORDERS"
+            },
+            {
+                "name": "SIGN_ORDERS",
+                "codename": "SIGN_ORDERS"
+            },
+            {
+                "name": "DELIVER_ORDERS",
+                "codename": "DELIVER_ORDERS"
+            },
+        ]
     }
 ]
