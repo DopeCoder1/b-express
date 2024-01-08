@@ -37,7 +37,7 @@ async def get_users():
     return await user_service.get_users()
 
 
-@router.post("/users", dependencies=[Depends(JWTBearer())], status_code=status.HTTP_201_CREATED, response_model=UserCreateSchemas)
+@router.post("/users", dependencies=[Depends(JWTBearer())], status_code=status.HTTP_201_CREATED, response_model=UserViewSchemas)
 async def create_user(payload: UserCreateSchemas, user: str = Depends(JWTBearer())):
     return await user_service.create_user(payload, user)
 
