@@ -25,6 +25,9 @@ class OrderViewSerialized:
 
         warehouse = await db.execute(select(Warehouse).where(Warehouse.id == order.warehouse_id))
         warehouse = warehouse.scalars().first()
+        warehouse_model = None
+        if warehouse:
+            warehouse_model = WarehouseOutShort(**warehouse.__dict__)
 
         direction = await db.execute(select(Directions).where(Directions.id == order.direction_id))
         direction = direction.scalars().first()
@@ -53,7 +56,7 @@ class OrderViewSerialized:
             order_items_out.append(OrderItemsOut(**order_item.__dict__))
         return OrderViewSchemas(
             **order.__dict__,
-            warehouse=WarehouseOutShort(**warehouse.__dict__),
+            warehouse=warehouse_model,
             direction=direction_out,
             payment=PaymentOut(**payment.__dict__),
             diection=direction_out,

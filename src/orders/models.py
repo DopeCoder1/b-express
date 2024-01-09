@@ -69,7 +69,7 @@ class Orders(Base, TimestampMixin):
     insurance = Column(DECIMAL(10, 2), nullable=False)
     total_weight = Column(Float, nullable=False)
     total_volume = Column(Float, nullable=False)
-    warehouse_id = Column(Integer, ForeignKey("warehouses.id"), nullable=False)
+    warehouse_id = Column(Integer, ForeignKey("warehouses.id"), nullable=True)
     direction_id = Column(Integer, ForeignKey("directions.id"))
 
 
