@@ -76,6 +76,7 @@ class OrdersCreateSchemas(BaseModel):
 
 
 class OrderViewSchemas(BaseModel):
+    id: int
     address: str
     courier: int | None = None
     sender_fio: str

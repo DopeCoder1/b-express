@@ -1,5 +1,7 @@
 from pydantic import BaseModel
 
+from src.geography.schemas import GeographyViewSchemas
+from src.users.schemas import UserViewSchemas
 
 class WarehouseCreateSchemas(BaseModel):
     address: str
@@ -26,10 +28,10 @@ class WarehouseViewSchemas(BaseModel):
     id: int
     address: str
     name: str
-    city: int
+    city: GeographyViewSchemas
     street: str
     number: str
-    creator: int
+    creator: UserViewSchemas
 
     class Config:
         from_attributes = True
