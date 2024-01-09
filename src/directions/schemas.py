@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 from src.directions.models import TransportationType
-from src.geography.schemas import CityOut
+from src.geography.schemas import CityOut, GeographyViewSchemas
 
 
 class DirectionCreateSchemas(BaseModel):
@@ -24,8 +24,9 @@ class DirectionCreateSchemas(BaseModel):
 
 
 class DirectionViewSchemas(BaseModel):
-    arrival_city_id: int
-    departure_city_id: int
+    id: int
+    arrival_city: GeographyViewSchemas
+    departure_city: GeographyViewSchemas
     is_active: bool
     transportation_type: TransportationType
 
