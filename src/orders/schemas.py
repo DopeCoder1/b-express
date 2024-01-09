@@ -37,7 +37,7 @@ class OrdersCreateSchemas(BaseModel):
     total_weight: float
     total_volume: float
     insurance: float
-    warehouse_id: int
+    warehouse_id: int | None = None
     direction_id: int
     payment: PaymentCreateSchemas
     order_items: list[OrderItemsCreateSchemas]

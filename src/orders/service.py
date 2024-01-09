@@ -49,7 +49,7 @@ class OrderService(BaseDao):
                 **order_item.model_dump(), order_id=order.id, status=OrderStatus.CREATED.value)
             db.add(order_item)
         await db.commit()
-        return await nested_serializer.serialize_by_id(order.id, user)
+        return await nested_serializer.serialize_by_id(order.id, user, db)
 
     async def get_orders(self, user: UserViewSchemas, db: AsyncSession = Depends(get_db)) -> list[OrderViewSchemas]:
         orders = await OrderService.find_all({"creator": user.id})
