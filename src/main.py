@@ -4,12 +4,12 @@ from starlette.middleware.cors import CORSMiddleware
 
 from src.clients.sendgrid import mail_client
 from src.common.models import SendEmail
+from src.common.router import router as common_router
 from src.config import settings
 from src.database import async_session
 from src.directions.router import router as directions_router
 from src.geography.router import router as router_geography
 from src.geography.utils import init_data
-from src.orders.models import OrderStatus
 from src.orders.router import router as router_orders
 from src.users.models import Group, Permission
 from src.users.router import router as router_users
@@ -33,6 +33,7 @@ app.include_router(router_orders)
 app.include_router(router_geography)
 app.include_router(router_warehouse)
 app.include_router(directions_router)
+app.include_router(common_router)
 
 
 @app.on_event('startup')
@@ -43,11 +44,6 @@ async def startup_event_setup():
 @app.post("/api/v1/send-email", tags=["email"])
 async def send_email(send_email: SendEmail):
     return mail_client.send(send_email)
-
-
-@app.get("/api/v1/statuses", tags=["health"])
-async def get_statuses():
-    return [status.value for status in OrderStatus]
 
 
 @app.on_event("startup")

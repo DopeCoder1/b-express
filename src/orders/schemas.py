@@ -86,6 +86,7 @@ class OrderViewSchemas(BaseModel):
     total_weight: float
     total_volume: float
     insurance: float
+    order_status: OrderStatus
     direction: DirectionOut | None = None
     payment: PaymentOut | None = None
     warehouse: WarehouseOutShort | None = None
@@ -94,3 +95,10 @@ class OrderViewSchemas(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class OrderPaginated(BaseModel):
+    page: int
+    limit: int
+    total: int
+    data: list[OrderViewSchemas]

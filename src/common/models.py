@@ -1,4 +1,5 @@
 from datetime import datetime
+from enum import Enum
 
 from pydantic import BaseModel
 from sqlalchemy import Column, DateTime
@@ -22,3 +23,8 @@ class SendEmail(BaseModel):
                 "message": "Hello world"
             }
         }
+
+
+class SortOrder(Enum):
+    ASC = "asc"
+    DESC = "desc"
